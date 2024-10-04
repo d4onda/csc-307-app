@@ -62,6 +62,31 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+app.delete("/users/:id", (req, res) => {
+  const id = req.params["id"];
+  const userToDelete = findUserById(id)
+  if (userToDelete === undefined){
+    res.status(404).send("User not found.")
+  }
+  const index = users["users_list"].indexOf[userToDelete]
+  if ( index != -1){
+    users['users_list'].splice(index, 1)
+    res.status(204).send("No content.")
+  }
+});
+  
+
+const addUser = (user) => {
+  users["users_list"].push(user);
+  return user;
+};
+
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.send();
+});
+
 app.use(express.json());
 
 app.get("/users", (req, res) => {
