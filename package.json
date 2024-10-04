@@ -7,11 +7,9 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": ""
+  ,
   "workspaces": [
-    "packages/*"
-  ],
-  "dependencies": {
-    "express": "^4.21.0"
-  }
+      "packages/*"
+  ]
 }
