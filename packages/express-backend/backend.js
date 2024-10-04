@@ -38,10 +38,32 @@ const findUserByName = (name) => {
   );
 };
 
+// app.get("/users", (req, res) => {
+//   const name = req.query.name;
+//   if (name != undefined) {
+//     let result = findUserByName(name);
+//     result = { users_list: result };
+//     res.send(result);
+//   } else {
+//     res.send(users);
+//   }
+// });
+
+const queryUser = (qryName, qryJob) => {
+  return users["users_list"].filter(
+    (user) => user["name"] === qryName && user["job"] === qryJob
+  );
+}
+
 app.get("/users", (req, res) => {
-  const name = req.query.name;
-  if (name != undefined) {
-    let result = findUserByName(name);
+  const {name, job} = req.query;
+  if (name != undefined && job == undefined){
+    let result = findUserByName(name)
+    res.send(result)
+  }
+  const findUser = queryUser(name, job)
+  if (findUser) {
+    let result = queryUser(name, job);
     result = { users_list: result };
     res.send(result);
   } else {
