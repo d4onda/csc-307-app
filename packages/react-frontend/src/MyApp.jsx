@@ -22,7 +22,7 @@ const characters = [
 ];
 
 function MyApp() {
-  
+
   useEffect(() => {
     fetchUsers()
       .then((res) => res.json())
@@ -37,12 +37,9 @@ function MyApp() {
       return i !== index;
     });
     setCharacters(updated);
-
-    function fetchUsers() {
-      const promise = fetch("http://localhost:8000/users");
-      return promise;
-    }
   }
+
+
 
   function updateList(person) {
     setCharacters([...characters, person]);
