@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const port = 8000;
@@ -32,22 +33,32 @@ const users = {
   ]
 };
 
+app.use(cors());
+
+app.use(express.json());
+
+const addUser = (user) => {
+  users["users_list"].push(user);
+  return user;
+};
+
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.send();
+});
+
 const findUserByName = (name) => {
   return users["users_list"].filter(
     (user) => user["name"] === name
   );
 };
 
-app.get("/users", (req, res) => {
-  const name = req.query.name;
-  if (name != undefined) {
-    let result = findUserByName(name);
-    result = { users_list: result };
-    res.send(result);
-  } else {
-    res.send(users);
-  }
-});
+const findUserByJob = (job) => {
+  return users["users_list"].filter(
+  (user) => user["job"] === job
+  );
+}
 
 const queryUser = (qryName, qryJob) => {
   return users["users_list"].filter(
@@ -58,15 +69,21 @@ const queryUser = (qryName, qryJob) => {
 app.get("/users", (req, res) => {
   const {name, job} = req.query;
   if (name != undefined && job == undefined){
-    let result = findUserByName(name)
-    res.send(result)
-  }
-  const findUser = queryUser(name, job)
-  if (findUser) {
-    let result = queryUser(name, job);
-    result = { users_list: result };
+    let result = findUserByName(name);
     res.send(result);
-  } else {
+  }
+  if (name == undefined && job != undefined){
+    let result = findUserByJob(job);
+    res.send(result);
+  }
+  if (name != undefined && job != undefined){
+    const findUser = queryUser(name, job);
+    if (findUser) {
+      let result = queryUser(name, job);
+      result = { users_list: result };
+      res.send(result);}
+  } 
+  else {
     res.send(users);
   }
 });
@@ -96,20 +113,6 @@ app.delete("/users/:id", (req, res) => {
     res.status(204).send("No content.")
   }
 });
-  
-
-const addUser = (user) => {
-  users["users_list"].push(user);
-  return user;
-};
-
-app.post("/users", (req, res) => {
-  const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
-});
-
-app.use(express.json());
 
 app.get("/users", (req, res) => {
   res.send(users);
